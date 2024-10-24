@@ -7,17 +7,29 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/evmos/ethermint/x/evm/statedb"
+
+	precopmiles_common "github.com/0glabs/0g-chain/precompiles/common"
 )
 
-func (d *DASignersPrecompile) RegisterSigner(ctx sdk.Context, evm *vm.EVM, stateDB *statedb.StateDB, method *abi.Method, args []interface{}) ([]byte, error) {
+func (d *DASignersPrecompile) RegisterSigner(
+	ctx sdk.Context,
+	evm *vm.EVM,
+	stateDB *statedb.StateDB,
+	contract *vm.Contract,
+	method *abi.Method,
+	args []interface{},
+) ([]byte, error) {
 	msg, err := NewMsgRegisterSigner(args)
 	if err != nil {
 		return nil, err
 	}
 	// validation
-	sender := ToLowerHexWithoutPrefix(evm.Origin)
+	sender := precopmiles_common.ToLowerHexWithoutPrefix(evm.Origin)
 	if sender != msg.Signer.Account {
 		return nil, fmt.Errorf(ErrInvalidSender, sender, msg.Signer.Account)
+	}
+	if contract.CallerAddress != evm.Origin {
+		return nil, fmt.Errorf(precopmiles_common.ErrSenderNotOrigin)
 	}
 	// execute
 	_, err = d.dasignersKeeper.RegisterSigner(sdk.WrapSDKContext(ctx), msg)
@@ -32,10 +44,21 @@ func (d *DASignersPrecompile) RegisterSigner(ctx sdk.Context, evm *vm.EVM, state
 	return method.Outputs.Pack()
 }
 
-func (d *DASignersPrecompile) RegisterNextEpoch(ctx sdk.Context, evm *vm.EVM, stateDB *statedb.StateDB, method *abi.Method, args []interface{}) ([]byte, error) {
-	msg, err := NewMsgRegisterNextEpoch(args, ToLowerHexWithoutPrefix(evm.Origin))
+func (d *DASignersPrecompile) RegisterNextEpoch(
+	ctx sdk.Context,
+	evm *vm.EVM,
+	stateDB *statedb.StateDB,
+	contract *vm.Contract,
+	method *abi.Method,
+	args []interface{},
+) ([]byte, error) {
+	msg, err := NewMsgRegisterNextEpoch(args, precopmiles_common.ToLowerHexWithoutPrefix(evm.Origin))
 	if err != nil {
 		return nil, err
+	}
+	// validation
+	if contract.CallerAddress != evm.Origin {
+		return nil, fmt.Errorf(precopmiles_common.ErrSenderNotOrigin)
 	}
 	// execute
 	_, err = d.dasignersKeeper.RegisterNextEpoch(sdk.WrapSDKContext(ctx), msg)
@@ -45,10 +68,21 @@ func (d *DASignersPrecompile) RegisterNextEpoch(ctx sdk.Context, evm *vm.EVM, st
 	return method.Outputs.Pack()
 }
 
-func (d *DASignersPrecompile) UpdateSocket(ctx sdk.Context, evm *vm.EVM, stateDB *statedb.StateDB, method *abi.Method, args []interface{}) ([]byte, error) {
-	msg, err := NewMsgUpdateSocket(args, ToLowerHexWithoutPrefix(evm.Origin))
+func (d *DASignersPrecompile) UpdateSocket(
+	ctx sdk.Context,
+	evm *vm.EVM,
+	stateDB *statedb.StateDB,
+	contract *vm.Contract,
+	method *abi.Method,
+	args []interface{},
+) ([]byte, error) {
+	msg, err := NewMsgUpdateSocket(args, precopmiles_common.ToLowerHexWithoutPrefix(evm.Origin))
 	if err != nil {
 		return nil, err
+	}
+	// validation
+	if contract.CallerAddress != evm.Origin {
+		return nil, fmt.Errorf(precopmiles_common.ErrSenderNotOrigin)
 	}
 	// execute
 	_, err = d.dasignersKeeper.UpdateSocket(sdk.WrapSDKContext(ctx), msg)

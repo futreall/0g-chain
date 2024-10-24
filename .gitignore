@@ -49,3 +49,8 @@ go.work.sum
 
 # runtime
 run
+
+# contracts
+precompiles/interfaces/build
+precompiles/interfaces/node_modules
+precompiles/interfaces/abis

@@ -5,7 +5,7 @@ import (
 
 	"github.com/0glabs/0g-chain/app"
 	"github.com/0glabs/0g-chain/chaincfg"
-	dasignersprecompile "github.com/0glabs/0g-chain/precompiles/dasigners"
+	precopmiles_common "github.com/0glabs/0g-chain/precompiles/common"
 	"github.com/0glabs/0g-chain/x/bep3/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/ethereum/go-ethereum/common"
@@ -51,7 +51,7 @@ func GenSigner() *TestSigner {
 	addr, priv := emtests.NewAddrKey()
 	s.PrivKey = priv
 	s.Addr = addr
-	s.HexAddr = dasignersprecompile.ToLowerHexWithoutPrefix(s.Addr)
+	s.HexAddr = precopmiles_common.ToLowerHexWithoutPrefix(s.Addr)
 	s.Signer = emtests.NewSigner(priv)
 	return &s
 }

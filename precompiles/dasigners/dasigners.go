@@ -139,11 +139,11 @@ func (d *DASignersPrecompile) Run(evm *vm.EVM, contract *vm.Contract, readonly b
 		bz, err = d.RegisteredEpoch(ctx, evm, method, args)
 	// txs
 	case DASignersFunctionRegisterSigner:
-		bz, err = d.RegisterSigner(ctx, evm, stateDB, method, args)
+		bz, err = d.RegisterSigner(ctx, evm, stateDB, contract, method, args)
 	case DASignersFunctionRegisterNextEpoch:
-		bz, err = d.RegisterNextEpoch(ctx, evm, stateDB, method, args)
+		bz, err = d.RegisterNextEpoch(ctx, evm, stateDB, contract, method, args)
 	case DASignersFunctionUpdateSocket:
-		bz, err = d.UpdateSocket(ctx, evm, stateDB, method, args)
+		bz, err = d.UpdateSocket(ctx, evm, stateDB, contract, method, args)
 	}
 
 	if err != nil {

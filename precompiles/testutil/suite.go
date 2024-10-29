@@ -1,6 +1,7 @@
 package testutil
 
 import (
+	"math/big"
 	"strings"
 
 	"github.com/0glabs/0g-chain/app"
@@ -44,15 +45,25 @@ type TestSigner struct {
 	HexAddr string
 	PrivKey cryptotypes.PrivKey
 	Signer  keyring.Signer
+	ValAddr sdk.ValAddress
+	AccAddr sdk.AccAddress
 }
 
-func GenSigner() *TestSigner {
+func (suite *PrecompileTestSuite) GenSigner() *TestSigner {
 	var s TestSigner
 	addr, priv := emtests.NewAddrKey()
 	s.PrivKey = priv
 	s.Addr = addr
 	s.HexAddr = precopmiles_common.ToLowerHexWithoutPrefix(s.Addr)
 	s.Signer = emtests.NewSigner(priv)
+	valAddr, _ := sdk.ValAddressFromHex(s.HexAddr)
+	accAddr, _ := sdk.AccAddressFromHexUnsafe(s.HexAddr)
+	s.ValAddr = valAddr
+	s.AccAddr = accAddr
+
+	// 10000 a0gi for test
+	suite.App.GetBankKeeper().MintCoins(suite.Ctx, "mint", sdk.NewCoins(chaincfg.MakeCoinForGasDenom(big.NewInt(10000000000))))
+	suite.App.GetBankKeeper().SendCoinsFromModuleToAccount(suite.Ctx, "mint", accAddr, sdk.NewCoins(chaincfg.MakeCoinForGasDenom(big.NewInt(10000000000))))
 	return &s
 }
 

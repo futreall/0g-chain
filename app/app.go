@@ -110,6 +110,7 @@ import (
 	chainparams "github.com/0glabs/0g-chain/app/params"
 	"github.com/0glabs/0g-chain/chaincfg"
 	dasignersprecompile "github.com/0glabs/0g-chain/precompiles/dasigners"
+	stakingprecompile "github.com/0glabs/0g-chain/precompiles/staking"
 
 	"github.com/0glabs/0g-chain/x/bep3"
 	bep3keeper "github.com/0glabs/0g-chain/x/bep3/keeper"
@@ -499,11 +500,18 @@ func NewApp(
 	app.dasignersKeeper = dasignerskeeper.NewKeeper(keys[dasignerstypes.StoreKey], appCodec, app.stakingKeeper, govAuthAddrStr)
 	// precopmiles
 	precompiles := make(map[common.Address]vm.PrecompiledContract)
+	// dasigners
 	daSignersPrecompile, err := dasignersprecompile.NewDASignersPrecompile(app.dasignersKeeper)
 	if err != nil {
-		panic("initialize precompile failed")
+		panic(fmt.Sprintf("initialize dasigners precompile failed: %v", err))
 	}
 	precompiles[daSignersPrecompile.Address()] = daSignersPrecompile
+	// staking
+	stakingPrecompile, err := stakingprecompile.NewStakingPrecompile(app.stakingKeeper)
+	if err != nil {
+		panic(fmt.Sprintf("initialize staking precompile failed: %v", err))
+	}
+	precompiles[stakingPrecompile.Address()] = stakingPrecompile
 
 	app.evmKeeper = evmkeeper.NewKeeper(
 		appCodec, keys[evmtypes.StoreKey], tkeys[evmtypes.TransientKey],

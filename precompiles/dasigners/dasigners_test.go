@@ -14,6 +14,7 @@ import (
 	"github.com/0glabs/0g-chain/x/dasigners/v1/types"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
@@ -23,7 +24,6 @@ import (
 	"cosmossdk.io/math"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/evmos/ethermint/crypto/ethsecp256k1"
 )
 
 type DASignersTestSuite struct {
@@ -44,8 +44,7 @@ func (suite *DASignersTestSuite) AddDelegation(from string, to string, amount ma
 	suite.Require().NoError(err)
 	validator, found := suite.StakingKeeper.GetValidator(suite.Ctx, valAddr)
 	if !found {
-		consPriv, err := ethsecp256k1.GenerateKey()
-		suite.Require().NoError(err)
+		consPriv := ed25519.GenPrivKey()
 		newValidator, err := stakingtypes.NewValidator(valAddr, consPriv.PubKey(), stakingtypes.Description{})
 		suite.Require().NoError(err)
 		validator = newValidator

@@ -17,29 +17,29 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-type Commission struct {
+type Commission = struct {
 	CommissionRates CommissionRates `json:"commissionRates"`
 	UpdateTime      *big.Int        `json:"updateTime"`
 }
 
-type CommissionRates struct {
+type CommissionRates = struct {
 	Rate          *big.Int `json:"rate"`
 	MaxRate       *big.Int `json:"maxRate"`
 	MaxChangeRate *big.Int `json:"maxChangeRate"`
 }
 
-type Delegation struct {
+type Delegation = struct {
 	DelegatorAddress string   `json:"delegatorAddress"`
 	ValidatorAddress string   `json:"validatorAddress"`
 	Shares           *big.Int `json:"shares"`
 }
 
-type DelegationResponse struct {
+type DelegationResponse = struct {
 	Delegation Delegation `json:"delegation"`
 	Balance    *big.Int   `json:"balance"`
 }
 
-type Description struct {
+type Description = struct {
 	Moniker         string `json:"moniker"`
 	Identity        string `json:"identity"`
 	Website         string `json:"website"`
@@ -47,12 +47,12 @@ type Description struct {
 	Details         string `json:"details"`
 }
 
-type NullableUint struct {
+type NullableUint = struct {
 	IsNull bool     `json:"isNull"`
 	Value  *big.Int `json:"value"`
 }
 
-type PageRequest struct {
+type PageRequest = struct {
 	Key        []byte `json:"key"`
 	Offset     uint64 `json:"offset"`
 	Limit      uint64 `json:"limit"`
@@ -60,12 +60,12 @@ type PageRequest struct {
 	Reverse    bool   `json:"reverse"`
 }
 
-type PageResponse struct {
+type PageResponse = struct {
 	NextKey []byte `json:"nextKey"`
 	Total   uint64 `json:"total"`
 }
 
-type Params struct {
+type Params = struct {
 	UnbondingTime     int64    `json:"unbondingTime"`
 	MaxValidators     uint32   `json:"maxValidators"`
 	MaxEntries        uint32   `json:"maxEntries"`
@@ -74,14 +74,14 @@ type Params struct {
 	MinCommissionRate *big.Int `json:"minCommissionRate"`
 }
 
-type Redelegation struct {
+type Redelegation = struct {
 	DelegatorAddress    string              `json:"delegatorAddress"`
 	ValidatorSrcAddress string              `json:"validatorSrcAddress"`
 	ValidatorDstAddress string              `json:"validatorDstAddress"`
 	Entries             []RedelegationEntry `json:"entries"`
 }
 
-type RedelegationEntry struct {
+type RedelegationEntry = struct {
 	CreationHeight          int64    `json:"creationHeight"`
 	CompletionTime          int64    `json:"completionTime"`
 	InitialBalance          *big.Int `json:"initialBalance"`
@@ -90,23 +90,23 @@ type RedelegationEntry struct {
 	UnbondingOnHoldRefCount int64    `json:"unbondingOnHoldRefCount"`
 }
 
-type RedelegationEntryResponse struct {
+type RedelegationEntryResponse = struct {
 	RedelegationEntry RedelegationEntry `json:"redelegationEntry"`
 	Balance           *big.Int          `json:"balance"`
 }
 
-type RedelegationResponse struct {
+type RedelegationResponse = struct {
 	Redelegation Redelegation                `json:"redelegation"`
 	Entries      []RedelegationEntryResponse `json:"entries"`
 }
 
-type UnbondingDelegation struct {
+type UnbondingDelegation = struct {
 	DelegatorAddress string                     `json:"delegatorAddress"`
 	ValidatorAddress string                     `json:"validatorAddress"`
 	Entries          []UnbondingDelegationEntry `json:"entries"`
 }
 
-type UnbondingDelegationEntry struct {
+type UnbondingDelegationEntry = struct {
 	CreationHeight          int64    `json:"creationHeight"`
 	CompletionTime          int64    `json:"completionTime"`
 	InitialBalance          *big.Int `json:"initialBalance"`
@@ -115,7 +115,7 @@ type UnbondingDelegationEntry struct {
 	UnbondingOnHoldRefCount int64    `json:"unbondingOnHoldRefCount"`
 }
 
-type Validator struct {
+type Validator = struct {
 	OperatorAddress         string      `json:"operatorAddress"`
 	ConsensusPubkey         string      `json:"consensusPubkey"`
 	Jailed                  bool        `json:"jailed"`

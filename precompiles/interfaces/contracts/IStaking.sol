@@ -185,7 +185,7 @@ interface IStaking {
         Description memory description,
         CommissionRates memory commission,
         uint minSelfDelegation,
-        string memory pubkey,
+        string memory pubkey, // 0gchaind tendermint show-validator
         uint value
     ) external;
 

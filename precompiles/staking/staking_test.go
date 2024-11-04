@@ -1,6 +1,7 @@
 package staking_test
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 	"testing"
@@ -72,6 +73,46 @@ func (suite *StakingTestSuite) AddDelegation(from string, to string, amount math
 		ValidatorAddress: valAddr.String(),
 		Shares:           bonded.Add(amount).ToLegacyDec(),
 	})
+}
+
+func (suite *StakingTestSuite) setupValidator(signer *testutil.TestSigner) {
+	method := stakingprecompile.StakingFunctionCreateValidator
+	description := stakingprecompile.Description{
+		Moniker:         "test node",
+		Identity:        "test node identity",
+		Website:         "http://test.node.com",
+		SecurityContact: "test node security contract",
+		Details:         "test node details",
+	}
+	commission := stakingprecompile.CommissionRates{
+		Rate:          math.LegacyOneDec().BigInt(),
+		MaxRate:       math.LegacyOneDec().BigInt(),
+		MaxChangeRate: math.LegacyOneDec().BigInt(),
+	}
+	minSelfDelegation := big.NewInt(1)
+	pubkey := "eh/aR8BGUBIYI/Ust0NVBxZafLDAm7344F9dKzZU+7g="
+	value := big.NewInt(100000000)
+	input, err := suite.abi.Pack(
+		method,
+		description,
+		commission,
+		minSelfDelegation,
+		pubkey,
+		value,
+	)
+	suite.Assert().NoError(err)
+	_, err = suite.runTx(input, signer, 10000000)
+	suite.Assert().NoError(err)
+}
+
+func (suite *StakingTestSuite) firstBondedValidator() (sdk.ValAddress, error) {
+	validators := suite.stakingKeeper.GetValidators(suite.Ctx, 10)
+	for _, v := range validators {
+		if v.IsBonded() {
+			return sdk.ValAddressFromBech32(v.OperatorAddress)
+		}
+	}
+	return nil, errors.New("no bonded validator")
 }
 
 func (suite *StakingTestSuite) runTx(input []byte, signer *testutil.TestSigner, gas uint64) ([]byte, error) {

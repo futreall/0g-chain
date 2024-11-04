@@ -72,8 +72,8 @@ func (suite *DASignersTestSuite) SetupTest() {
 	suite.Assert().EqualValues(ok, true)
 	suite.dasigners = precompile.(*dasignersprecompile.DASignersPrecompile)
 
-	suite.signerOne = testutil.GenSigner()
-	suite.signerTwo = testutil.GenSigner()
+	suite.signerOne = suite.GenSigner()
+	suite.signerTwo = suite.GenSigner()
 	abi, err := abi.JSON(strings.NewReader(dasignersprecompile.DASignersABI))
 	suite.Assert().NoError(err)
 	suite.abi = abi

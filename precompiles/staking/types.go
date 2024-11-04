@@ -181,6 +181,12 @@ func convertQueryPageRequest(pagination PageRequest) *query.PageRequest {
 }
 
 func convertPageResponse(pagination *query.PageResponse) PageResponse {
+	if pagination == nil {
+		return PageResponse{
+			NextKey: make([]byte, 0),
+			Total:   1,
+		}
+	}
 	return PageResponse{
 		NextKey: pagination.NextKey,
 		Total:   pagination.Total,

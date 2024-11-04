@@ -22,7 +22,6 @@ struct CommissionRates {
     uint maxChangeRate; // 18 decimals
 }
 
-
 /**
  * @dev Commission defines the commission parameters.
  */
@@ -207,7 +206,7 @@ interface IStaking {
     function delegate(
         string memory validatorAddress,
         uint amount // in bond denom
-    ) external returns (bool success);
+    ) external;
 
     /**
      * @dev BeginRedelegate defines a method for performing a redelegationA

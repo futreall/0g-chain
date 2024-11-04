@@ -103,6 +103,8 @@ func (suite *StakingTestSuite) setupValidator(signer *testutil.TestSigner) {
 	suite.Assert().NoError(err)
 	_, err = suite.runTx(input, signer, 10000000)
 	suite.Assert().NoError(err)
+	_, err = suite.stakingKeeper.ApplyAndReturnValidatorSetUpdates(suite.Ctx)
+	suite.Assert().NoError(err)
 }
 
 func (suite *StakingTestSuite) firstBondedValidator() (sdk.ValAddress, error) {

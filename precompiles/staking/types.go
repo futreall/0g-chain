@@ -335,7 +335,7 @@ func NewMsgCreateValidator(args []interface{}, sender common.Address, denom stri
 	}
 
 	value := args[4].(*big.Int)
-	return &stakingtypes.MsgCreateValidator{
+	msg := &stakingtypes.MsgCreateValidator{
 		Description:       convertStakingDescription(description),
 		Commission:        convertStakingCommissionRates(commission),
 		MinSelfDelegation: math.NewIntFromBigInt(minSelfDelegation),
@@ -343,7 +343,8 @@ func NewMsgCreateValidator(args []interface{}, sender common.Address, denom stri
 		ValidatorAddress:  sdk.ValAddress(sender.Bytes()).String(),
 		Pubkey:            pkAny,
 		Value:             sdk.Coin{Denom: denom, Amount: math.NewIntFromBigInt(value)},
-	}, nil
+	}
+	return msg, msg.ValidateBasic()
 }
 
 func NewMsgEditValidator(args []interface{}, sender common.Address) (*stakingtypes.MsgEditValidator, error) {
@@ -366,12 +367,13 @@ func NewMsgEditValidator(args []interface{}, sender common.Address) (*stakingtyp
 		minSelfDelegation = &value
 	}
 
-	return &stakingtypes.MsgEditValidator{
+	msg := &stakingtypes.MsgEditValidator{
 		Description:       convertStakingDescription(description),
 		CommissionRate:    commissionRate,
 		ValidatorAddress:  sdk.ValAddress(sender.Bytes()).String(),
 		MinSelfDelegation: minSelfDelegation,
-	}, nil
+	}
+	return msg, msg.ValidateBasic()
 }
 
 func NewMsgDelegate(args []interface{}, sender common.Address, denom string) (*stakingtypes.MsgDelegate, error) {
@@ -381,11 +383,12 @@ func NewMsgDelegate(args []interface{}, sender common.Address, denom string) (*s
 	validatorAddress := args[0].(string)
 	amount := args[1].(*big.Int)
 
-	return &stakingtypes.MsgDelegate{
+	msg := &stakingtypes.MsgDelegate{
 		DelegatorAddress: sdk.AccAddress(sender.Bytes()).String(),
 		ValidatorAddress: validatorAddress,
 		Amount:           sdk.Coin{Denom: denom, Amount: math.NewIntFromBigInt(amount)},
-	}, nil
+	}
+	return msg, msg.ValidateBasic()
 }
 
 func NewMsgBeginRedelegate(args []interface{}, sender common.Address, denom string) (*stakingtypes.MsgBeginRedelegate, error) {
@@ -396,12 +399,13 @@ func NewMsgBeginRedelegate(args []interface{}, sender common.Address, denom stri
 	validatorDstAddress := args[1].(string)
 	amount := args[2].(*big.Int)
 
-	return &stakingtypes.MsgBeginRedelegate{
+	msg := &stakingtypes.MsgBeginRedelegate{
 		DelegatorAddress:    sdk.AccAddress(sender.Bytes()).String(),
 		ValidatorSrcAddress: validatorSrcAddress,
 		ValidatorDstAddress: validatorDstAddress,
 		Amount:              sdk.Coin{Denom: denom, Amount: math.NewIntFromBigInt(amount)},
-	}, nil
+	}
+	return msg, msg.ValidateBasic()
 }
 
 func NewMsgUndelegate(args []interface{}, sender common.Address, denom string) (*stakingtypes.MsgUndelegate, error) {
@@ -411,11 +415,12 @@ func NewMsgUndelegate(args []interface{}, sender common.Address, denom string) (
 	validatorAddress := args[0].(string)
 	amount := args[1].(*big.Int)
 
-	return &stakingtypes.MsgUndelegate{
+	msg := &stakingtypes.MsgUndelegate{
 		DelegatorAddress: sdk.AccAddress(sender.Bytes()).String(),
 		ValidatorAddress: validatorAddress,
 		Amount:           sdk.Coin{Denom: denom, Amount: math.NewIntFromBigInt(amount)},
-	}, nil
+	}
+	return msg, msg.ValidateBasic()
 }
 
 func NewMsgCancelUnbondingDelegation(args []interface{}, sender common.Address, denom string) (*stakingtypes.MsgCancelUnbondingDelegation, error) {
@@ -426,12 +431,13 @@ func NewMsgCancelUnbondingDelegation(args []interface{}, sender common.Address, 
 	amount := args[1].(*big.Int)
 	creationHeight := args[2].(*big.Int)
 
-	return &stakingtypes.MsgCancelUnbondingDelegation{
+	msg := &stakingtypes.MsgCancelUnbondingDelegation{
 		DelegatorAddress: sdk.AccAddress(sender.Bytes()).String(),
 		ValidatorAddress: validatorAddress,
 		Amount:           sdk.Coin{Denom: denom, Amount: math.NewIntFromBigInt(amount)},
 		CreationHeight:   creationHeight.Int64(),
-	}, nil
+	}
+	return msg, msg.ValidateBasic()
 }
 
 func NewQueryValidatorsRequest(args []interface{}) (*stakingtypes.QueryValidatorsRequest, error) {

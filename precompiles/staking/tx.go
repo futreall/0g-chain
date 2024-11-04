@@ -2,6 +2,7 @@ package staking
 
 import (
 	"fmt"
+	"math/big"
 
 	precopmiles_common "github.com/0glabs/0g-chain/precompiles/common"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -103,12 +104,12 @@ func (s *StakingPrecompile) BeginRedelegate(
 		return nil, fmt.Errorf(precopmiles_common.ErrSenderNotOrigin)
 	}
 	// execute
-	_, err = stakingkeeper.NewMsgServerImpl(s.stakingKeeper).BeginRedelegate(ctx, msg)
+	response, err := stakingkeeper.NewMsgServerImpl(s.stakingKeeper).BeginRedelegate(ctx, msg)
 	if err != nil {
 		return nil, err
 	}
 	// emit events
-	return method.Outputs.Pack()
+	return method.Outputs.Pack(big.NewInt(response.CompletionTime.UTC().Unix()))
 }
 
 func (s *StakingPrecompile) Undelegate(
@@ -128,12 +129,12 @@ func (s *StakingPrecompile) Undelegate(
 		return nil, fmt.Errorf(precopmiles_common.ErrSenderNotOrigin)
 	}
 	// execute
-	_, err = stakingkeeper.NewMsgServerImpl(s.stakingKeeper).Undelegate(ctx, msg)
+	response, err := stakingkeeper.NewMsgServerImpl(s.stakingKeeper).Undelegate(ctx, msg)
 	if err != nil {
 		return nil, err
 	}
 	// emit events
-	return method.Outputs.Pack()
+	return method.Outputs.Pack(big.NewInt(response.CompletionTime.UTC().Unix()))
 }
 
 func (s *StakingPrecompile) CancelUnbondingDelegation(

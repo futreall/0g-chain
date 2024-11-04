@@ -3,6 +3,7 @@ package testutil
 import (
 	"math/big"
 	"strings"
+	"time"
 
 	"github.com/0glabs/0g-chain/app"
 	"github.com/0glabs/0g-chain/chaincfg"
@@ -81,7 +82,7 @@ func (suite *PrecompileTestSuite) SetupTest() {
 	hexAddr := strings.ToLower(crypto.PubkeyToAddress(key.PublicKey).Hex()[2:])
 	valAddr, err := sdk.ValAddressFromHex(hexAddr)
 	suite.Assert().NoError(err)
-	suite.Ctx = suite.App.NewContext(true, tmproto.Header{Height: 1, ChainID: app.TestChainId, ProposerAddress: consAddress})
+	suite.Ctx = suite.App.NewContext(true, tmproto.Header{Height: 1, ChainID: app.TestChainId, ProposerAddress: consAddress, Time: time.Now()})
 	newValidator, err := stakingtypes.NewValidator(valAddr, privkey.PubKey(), stakingtypes.Description{})
 	suite.Assert().NoError(err)
 	err = suite.StakingKeeper.SetValidatorByConsAddr(suite.Ctx, newValidator)

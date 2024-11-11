@@ -3,7 +3,6 @@ package dasigners
 import (
 	"fmt"
 	"math/big"
-	"strings"
 
 	precopmiles_common "github.com/0glabs/0g-chain/precompiles/common"
 	dasignerstypes "github.com/0glabs/0g-chain/x/dasigners/v1/types"
@@ -90,7 +89,7 @@ func NewQuerySignerRequest(args []interface{}) (*dasignerstypes.QuerySignerReque
 		Accounts: make([]string, len(accounts)),
 	}
 	for i, account := range accounts {
-		req.Accounts[i] = ToLowerHexWithoutPrefix(account)
+		req.Accounts[i] = precopmiles_common.ToLowerHexWithoutPrefix(account)
 	}
 	return &req, nil
 }
@@ -139,10 +138,6 @@ func NewIDASignersSignerDetail(signer *dasignerstypes.Signer) IDASignersSignerDe
 	}
 }
 
-func ToLowerHexWithoutPrefix(addr common.Address) string {
-	return strings.ToLower(addr.Hex()[2:])
-}
-
 func NewMsgRegisterSigner(args []interface{}) (*dasignerstypes.MsgRegisterSigner, error) {
 	if len(args) != 2 {
 		return nil, fmt.Errorf(precopmiles_common.ErrInvalidNumberOfArgs, 2, len(args))
@@ -151,7 +146,7 @@ func NewMsgRegisterSigner(args []interface{}) (*dasignerstypes.MsgRegisterSigner
 	signer := args[0].(IDASignersSignerDetail)
 	return &dasignerstypes.MsgRegisterSigner{
 		Signer: &dasignerstypes.Signer{
-			Account:  ToLowerHexWithoutPrefix(signer.Signer),
+			Account:  precopmiles_common.ToLowerHexWithoutPrefix(signer.Signer),
 			Socket:   signer.Socket,
 			PubkeyG1: SerializeG1(signer.PkG1),
 			PubkeyG2: SerializeG2(signer.PkG2),

@@ -26,7 +26,7 @@ type Market struct {
 type Markets []Market
 ```
 
-`GenesisState` defines the state that must be persisted when the blockchain stops/stars in order for the normal function of the pricefeed to resume.
+`GenesisState` defines the state that must be persisted when the blockchain stops/starts in order for the normal function of the pricefeed to resume.
 
 ```go
 // GenesisState - pricefeed state that must be provided at genesis
